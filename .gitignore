@@ -1,7 +1,11 @@
 /node_modules
 
 # IDE - VSCode
-/.vscode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
 
 # dotenv environment variable files
 .env
@@ -10,8 +14,14 @@
 .env.production.local
 .env.local
 
-# IDE - WebStorm
+# IDEs and editors
 /.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
 
 #Turbo
 /.turbo
