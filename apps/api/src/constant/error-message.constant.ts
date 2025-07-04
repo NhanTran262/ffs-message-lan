@@ -1,0 +1,19 @@
+export const ErrorMessage = {
+  SUCCESS: 'Successfully',
+  CREATED: 'Created successfully',
+  INTERNAL_SERVER_ERROR: 'Internal server error',
+  UNAUTHORIZED: 'Unauthorized',
+  BAD_REQUEST: 'Invalid request',
+  FORBIDDEN: 'Access denied',
+  NOT_FOUND: 'not found',
+  INVALID_EMAIL: 'Invalid email',
+  EMAIL_REQUIRED: 'Email is required',
+  EMAIL_EXIST: 'Email existed',
+  EMAIL_NOT_EXIST: 'Email not exist',
+  INVALID_PASSWORD: 'Invalid password',
+  PASSWORD_TOO_SHORT: 'Password must me at least 6 characters',
+  PASSWORD_REQUIRED: 'Password is required',
+  WRONG_EMAIL_PASSWORD: 'Email or password not match',
+  SESSION_DATA_NOT_FOUND: 'Session data not found',
+  CSRF_TOKEN_OR_REFRESH_TOKEN_NOT_MATCH: 'CSRF token or refresh token not match'
+}
