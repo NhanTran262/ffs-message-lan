@@ -7,9 +7,11 @@ import { PrismaModule } from '~/modules/prisma/prisma.module'
 import { GroupModule } from '~/modules/groups/group.module'
 import { MessageModule } from '~/modules/messages/message.module'
 import { ChatModule } from '~/modules/chats/chat.module'
+import { RedisModule } from '~/modules/redis/redis.module'
+import { SessionModule } from '~/modules/session/session.module'
 
 @Module({
-  imports: [AuthModule, UserModule, PrismaModule, GroupModule, MessageModule,ChatModule],
+  imports: [RedisModule, PrismaModule, SessionModule, AuthModule, UserModule, GroupModule, MessageModule, ChatModule],
   controllers: [AppController],
   providers: [AppService]
 })

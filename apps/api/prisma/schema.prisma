@@ -15,45 +15,95 @@ datasource db {
 }
 
 model User {
-  id          BigInt      @id @default(autoincrement())
-  fullName    String      @map("full_name") @db.VarChar(50)
-  email       String      @unique
-  password    String
-  createdAt   DateTime    @default(now()) @map("created_at") @db.Timestamp(0)
-  updatedAt   DateTime    @default(now()) @map("updated_at") @db.Timestamp(0)
-  isActivated Boolean     @default(true) @map("is_activated")
-  isDeleted   Boolean     @default(false) @map("is_deleted")
-  messages    Message[]
-  groupUsers  GroupUser[]
+  id           BigInt      @id @default(autoincrement())
+  fullName     String      @map("full_name") @db.VarChar(50)
+  phone        String      @unique
+  password     String
+  createdAt    DateTime    @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt    DateTime?   @map("updated_at") @db.Timestamp(0)
+  deletedAt    DateTime?   @map("deleted_at") @db.Timestamp(0)
+  isActivated  Boolean     @default(true) @map("is_activated")
+  isDeleted    Boolean     @default(false) @map("is_deleted")
+  deleteById   BigInt?     @map("delete_by_id")
+  deleteBy     User?       @relation("UserDeletedBy", fields: [deleteById], references: [id])
+  messages     Message[]
+  groupUsers   GroupUser[]
+  userRoles    UserRole[]
+  deletedUsers User[]      @relation("UserDeletedBy")
+  images       Image[]
+  deleteImages Image[]     @relation("ImageDeleteBy")
+  deleteGroups Group[]     @relation("GroupDeleteBy")
 
-  @@index([createdAt, updatedAt, isActivated, isDeleted, email])
+  @@index([createdAt, updatedAt, deletedAt, isActivated, isDeleted, phone, deleteById], name: "idx_user_active_status")
   @@map("users")
 }
 
-model Group {
-  id        BigInt      @id @default(autoincrement())
-  name      String
-  createdAt DateTime    @default(now()) @map("created_at") @db.Timestamp(0)
-  updatedAt DateTime    @default(now()) @map("updated_at") @db.Timestamp(0)
-  isDeleted Boolean     @default(false) @map("is_deleted")
-  messages  Message[]
-  users     GroupUser[]
+model Role {
+  id        BigInt     @id @default(autoincrement())
+  name      String     @db.VarChar(20)
+  userRoles UserRole[]
 
-  @@index([createdAt, updatedAt, isDeleted])
+  @@map("roles")
+}
+
+model UserRole {
+  id     BigInt @id @default(autoincrement())
+  userId BigInt @map("user_id")
+  roleId BigInt @map("role_id")
+  user   User   @relation(fields: [userId], references: [id])
+  role   Role   @relation(fields: [roleId], references: [id])
+
+  @@index([userId, roleId], name: "idx_user_role_active_status")
+  @@map("user_roles")
+}
+
+model Image {
+  id         BigInt    @id @default(autoincrement())
+  name       String
+  url        String    @db.LongText
+  isAvatar   Boolean   @map("is_avatar")
+  userId     BigInt    @map("user_id")
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt  DateTime? @map("updated_at") @db.Timestamp(0)
+  deletedAt  DateTime? @map("deleted_at") @db.Timestamp(0)
+  isDeleted  Boolean   @map("is_deleted")
+  deleteById BigInt?   @map("delete_by_id")
+  user       User      @relation(fields: [userId], references: [id])
+  deleteBy   User?     @relation("ImageDeleteBy", fields: [deleteById], references: [id])
+
+  @@index([isAvatar, createdAt, updatedAt, deletedAt, isDeleted, deleteById], name: "idx_image_active_status")
+  @@map("images")
+}
+
+model Group {
+  id         BigInt      @id @default(autoincrement())
+  name       String
+  createdAt  DateTime    @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt  DateTime?   @map("updated_at") @db.Timestamp(0)
+  deletedAt  DateTime?   @map("deleted_at") @db.Timestamp(0)
+  isDeleted  Boolean     @default(false) @map("is_deleted")
+  deleteById BigInt?     @map("delete_by_id")
+  deleteBy   User?       @relation("GroupDeleteBy", fields: [deleteById], references: [id])
+  messages   Message[]
+  users      GroupUser[]
+
+  @@index([createdAt, updatedAt, deletedAt, isDeleted, deleteById], name: "idx_group_active_status")
   @@map("groups")
 }
 
 model GroupUser {
-  id       BigInt   @id @default(autoincrement())
-  userId   BigInt   @map("user_id")
-  groupId  BigInt   @map("group_id")
-  user     User     @relation(fields: [userId], references: [id])
-  group    Group    @relation(fields: [groupId], references: [id])
-  joinedAt DateTime @default(now()) @db.Timestamp(0) @map("joined_at")
-  leavedAt DateTime @default(now()) @db.Timestamp(0) @map("leaved_at")
+  id       BigInt    @id @default(autoincrement())
+  userId   BigInt    @map("user_id")
+  groupId  BigInt    @map("group_id")
+  isOwner  Boolean   @default(false) @map("is_owner")
+  isAdmin  Boolean   @default(false) @map("is_admin")
+  isMember Boolean   @default(true) @map("is_member")
+  user     User      @relation(fields: [userId], references: [id])
+  group    Group     @relation(fields: [groupId], references: [id])
+  joinedAt DateTime  @default(now()) @map("joined_at") @db.Timestamp(0)
+  leavedAt DateTime? @default(now()) @map("leaved_at") @db.Timestamp(0)
 
-  @@unique([userId, groupId])
-  @@index([joinedAt])
+  @@index([joinedAt, leavedAt, isOwner, isAdmin, isMember, userId, groupId], name: "idx_group_user_active_status")
   @@map("group_users")
 }
 
@@ -64,8 +114,8 @@ model Message {
   content   String   @db.LongText
   sender    User     @relation(fields: [senderId], references: [id])
   group     Group    @relation(fields: [groupId], references: [id])
-  createdAt DateTime @default(now()) @db.Timestamp(0) @map("created_at")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(0)
 
-  @@index([groupId, createdAt,senderId])
+  @@index([groupId, createdAt, senderId], name: "idx_message_active_status")
   @@map("messages")
 }

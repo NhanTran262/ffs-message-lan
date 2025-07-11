@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common'
 import { UserService } from '~/modules/users/user.service'
 
 @Controller()
@@ -7,6 +7,6 @@ export class UserController {
 
   @Get()
   getHello(): string {
-    return this.uaeService.getHello();
+    return this.uaeService.getHello()
   }
 }

@@ -7,5 +7,4 @@ import { GroupService } from '~/modules/groups/group.service'
   controllers: [GroupController],
   providers: [GroupService]
 })
-export class GroupModule {
-}
+export class GroupModule {}

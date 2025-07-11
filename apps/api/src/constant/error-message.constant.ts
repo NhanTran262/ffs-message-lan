@@ -13,7 +13,7 @@ export const ErrorMessage = {
   INVALID_PASSWORD: 'Invalid password',
   PASSWORD_TOO_SHORT: 'Password must me at least 6 characters',
   PASSWORD_REQUIRED: 'Password is required',
-  WRONG_EMAIL_PASSWORD: 'Email or password not match',
+  WRONG_PHONE_PASSWORD: 'Phone or password not match',
   SESSION_DATA_NOT_FOUND: 'Session data not found',
   CSRF_TOKEN_OR_REFRESH_TOKEN_NOT_MATCH: 'CSRF token or refresh token not match'
 }

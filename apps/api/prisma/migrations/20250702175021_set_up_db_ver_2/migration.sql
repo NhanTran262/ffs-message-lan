@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE `group_users` ADD COLUMN `leaved_at` TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0);
