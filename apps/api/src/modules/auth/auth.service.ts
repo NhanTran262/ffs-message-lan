@@ -1,3 +1,4 @@
+import { th } from '@faker-js/faker/.'
 import { HttpStatus, Injectable, Logger } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import * as bcrypt from 'bcrypt'
@@ -22,6 +23,20 @@ export class AuthService {
     private readonly sessionService: SessionService,
     private readonly jwtService: JwtService
   ) {}
+
+  async register(authRequest: AuthRequest): Promise<AuthResponse> {
+    return handleWithFallback(
+      async () => {
+        await this.userRepository.saveUser(authRequest)
+        return await this.generateAuthContext(authRequest)
+          .then((context) => this.validateUser(context))
+          .then((context) => this.handleSession(context))
+          .then((context) => this.authResponse(context))
+      },
+      'AuthService.register',
+      this.logger
+    )
+  }
 
   async authenticate(authRequest: AuthRequest): Promise<AuthResponse> {
     return handleWithFallback(

@@ -1,6 +1,7 @@
 export const ErrorMessage = {
   SUCCESS: 'Successfully',
   CREATED: 'Created successfully',
+  CREATED_FAILED: 'Created failed',
   INTERNAL_SERVER_ERROR: 'Internal server error',
   UNAUTHORIZED: 'Unauthorized',
   BAD_REQUEST: 'Invalid request',
@@ -10,6 +11,7 @@ export const ErrorMessage = {
   EMAIL_REQUIRED: 'Email is required',
   EMAIL_EXIST: 'Email existed',
   EMAIL_NOT_EXIST: 'Email not exist',
+  PHONE_CONFLICT: 'Phone already exists',
   INVALID_PASSWORD: 'Invalid password',
   PASSWORD_TOO_SHORT: 'Password must me at least 6 characters',
   PASSWORD_REQUIRED: 'Password is required',

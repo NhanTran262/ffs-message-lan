@@ -13,6 +13,10 @@ export class AuthRequest {
 
   @IsString()
   @IsOptional()
+  fullName?: string
+
+  @IsString()
+  @IsOptional()
   deviceId?: string
 
   @IsString()

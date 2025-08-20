@@ -19,7 +19,8 @@
     "noFallthroughCasesInSwitch": false,
     "esModuleInterop": true,
     "paths": {
-      "~/*": ["src/*"]
+      "~/*": ["src/*"],
+      "rxjs": ["../../node_modules/rxjs"]
     }
   },
   "files": ["src/type.d.ts"],

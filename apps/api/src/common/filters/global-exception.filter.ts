@@ -17,15 +17,11 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     if (exception instanceof HttpException) {
       status = exception.getStatus()
       const response = exception.getResponse() as string | Record<string, any>
-      message = typeof response === 'string'
-        ? response
-        : (response?.['message'] as string) || message
-      code = typeof response === 'number'
-        ? response
-        : (response?.['code'] as number) || (status === HttpStatus.BAD_REQUEST
-          ? ErrorCode.BAD_REQUEST
-          : code
-      )
+      message = typeof response === 'string' ? response : (response?.['message'] as string) || message
+      code =
+        typeof response === 'number'
+          ? response
+          : (response?.['code'] as number) || (status === HttpStatus.BAD_REQUEST ? ErrorCode.BAD_REQUEST : code)
     } else if (exception instanceof Error) {
       message = exception.message
     }

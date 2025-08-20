@@ -13,6 +13,8 @@ export class LogoutGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest()
     const accessToken = this.extractTokenFromHeader(request)
+    console.log('LogoutGuard: Access Token:', accessToken)
+
     if (!accessToken) {
       throw new AppException('Access token not found', ErrorCode.NOT_FOUND, HttpStatus.NOT_FOUND)
     }

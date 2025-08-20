@@ -1,2 +1,25 @@
 node_modules/
 dist/
+apps/web/.react-router/
+apps/api/dist/
+apps/api/node_modules/
+apps/web/node_modules/
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+#Turbo
+/.turbo

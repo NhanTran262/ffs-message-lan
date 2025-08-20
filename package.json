@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
-    "lint": "turbo run lint"
+    "lint": "turbo run lint",
+    "prettier": "prettier --check .",
+    "prettier:fix": "prettier --write ."
   },
   "packageManager": "npm@11.4.2",
   "workspaces": [
@@ -17,6 +19,13 @@
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
+    "prettier": "^3.6.2",
     "turbo": "^2.5.4"
+  },
+  "dependencies": {
+    "force": "^0.0.3"
+  },
+  "overrides": {
+    "rxjs": "^7.8.1"
   }
 }

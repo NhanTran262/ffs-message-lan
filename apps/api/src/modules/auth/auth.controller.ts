@@ -3,6 +3,7 @@ import { Response } from 'express'
 import { CurrentUser } from '~/common/decorators/current-user.decorator'
 import { GetCookie } from '~/common/decorators/get-cookie.decorator'
 import { LogoutGuard } from '~/common/guard/logout.guard'
+import { RefreshTokenGuard } from '~/common/guard/refresh-token.guard'
 import { FIFTEEN_MINUTES_TTL, THIRTY_DAYS_TTL } from '~/constant/ttl.constant'
 import { CookieDto } from '~/dto/cookie.dto'
 import { AuthRequest } from '~/dto/request/auth-request.dto'
@@ -54,6 +55,45 @@ export class AuthController {
   }
 
   @HttpCode(HttpStatus.OK)
+  @Post('register')
+  async register(
+    @Body() authRequest: AuthRequest,
+    @GetCookie(['deviceId', 'deviceType']) cookie: CookieDto,
+    @Res({ passthrough: true }) response: Response
+  ): Promise<Omit<AuthResponse, 'accessToken' | 'refreshToken' | 'csrfToken'>> {
+    authRequest.deviceId = cookie.deviceId
+    authRequest.deviceType = cookie.deviceType
+    const result = await this.authService.register(authRequest)
+    response
+      .cookie('accessToken', result.accessToken, {
+        httpOnly: false,
+        secure: false,
+        sameSite: 'strict',
+        maxAge: FIFTEEN_MINUTES_TTL
+      })
+      .cookie('refreshToken', result.refreshToken, {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'strict',
+        maxAge: THIRTY_DAYS_TTL
+      })
+      .cookie('csrfToken', result.csrfToken, {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'strict',
+        maxAge: THIRTY_DAYS_TTL
+      })
+    return {
+      id: result.id,
+      phone: result.phone,
+      fullName: result.fullName,
+      roles: result.roles,
+      avatar: result.avatar
+    }
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(RefreshTokenGuard)
   @Post('refresh-token')
   async refreshToken(
     @Body() refreshTokenRequest: RefreshTokenRequest,
@@ -106,11 +146,6 @@ export class AuthController {
     sessionDto.deviceType = cookie.deviceType
     sessionDto.deviceId = cookie.deviceId
     await this.authService.logout(sessionDto)
-    response
-      .clearCookie('deviceId')
-      .clearCookie('deviceType')
-      .clearCookie('accessToken')
-      .clearCookie('refreshToken')
-      .clearCookie('csrfToken')
+    response.clearCookie('accessToken').clearCookie('refreshToken').clearCookie('csrfToken')
   }
 }

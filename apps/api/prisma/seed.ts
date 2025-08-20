@@ -8,7 +8,7 @@ async function main() {
   // Create roles
   await prisma.role.createMany({
     data: [{ name: 'ADMIN' }, { name: 'CUSTOMER' }],
-    skipDuplicates: true,
+    skipDuplicates: true
   })
   console.log('✅ Created roles.')
 
@@ -31,18 +31,18 @@ async function main() {
       isActivated: true,
       userRoles: {
         create: {
-          roleId: BigInt(adminRole.id),
-        },
+          roleId: BigInt(adminRole.id)
+        }
       },
       images: {
         create: {
           name: 'Admin Avatar',
           url: faker.image.avatar(),
           isAvatar: true,
-          isDeleted: false,
-        },
-      },
-    },
+          isDeleted: false
+        }
+      }
+    }
   })
   console.log(`✅ Created admin user: ${adminUser.fullName} - ${adminUser.phone}`)
 
@@ -71,18 +71,18 @@ async function main() {
         isActivated: faker.datatype.boolean(),
         userRoles: {
           create: {
-            roleId: BigInt(customerRole.id),
-          },
+            roleId: BigInt(customerRole.id)
+          }
         },
         images: {
           create: {
             name: 'Avatar',
             url: faker.image.avatar(),
             isAvatar: true,
-            isDeleted: false,
-          },
-        },
-      },
+            isDeleted: false
+          }
+        }
+      }
     })
 
     console.log(`Created user: ${user.fullName} - ${user.phone}`)
