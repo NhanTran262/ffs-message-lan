@@ -168,7 +168,10 @@ export class AuthService {
   }
 
   private async generateTokens(context: AuthContextDto): Promise<AuthContextDto> {
-    const payload = { sub: context.user.id.toString(), phone: context.user.phone }
+    const payload = {
+      sub: context.user.id.toString(),
+      phone: context.user.phone
+    }
     context.accessToken = await this.jwtService.signAsync(payload, {
       secret: jwtConstants.accessTokenSecret,
       expiresIn: '15m'

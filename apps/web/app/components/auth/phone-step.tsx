@@ -1,8 +1,10 @@
-import { Button } from '~/components/ui/button'
-import { Form, FormControl, FormField, FormItem, FormMessage } from '~/components/ui/form'
-import ClientOnly from '~/wrapper/client-only'
-import PhoneInput from 'react-phone-input-2'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { Button } from '~/components/ui/button'
+import { Form, FormField } from '~/components/ui/form'
+import PhoneInputField from '~/components/ui/phone-input-field'
+import { ValidationRules } from '~/constants/validation-rule.constant'
 
 export default function PhoneStep({
   onSwitch
@@ -38,17 +40,25 @@ export default function PhoneStep({
   //       // Handle error in sending OTP
   //     })
   // }
+  const FormSchema = z.object({
+    phone: z.string().min(ValidationRules.DEFAULT_FIELD_LENGTH, {
+      message: 'Số điện thoại không được để trống.'
+    })
+  })
 
-  const form = useForm({
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    mode: 'onChange',
+    reValidateMode: 'onChange',
     defaultValues: {
       phone: ''
     }
   })
 
-  const onSubmit = async (values: any) => {
-    onSwitch({ name: 'otp', phoneNumber: values.phone })
+  const onSubmit = async (value: z.infer<typeof FormSchema>) => {
+    onSwitch({ name: 'otp', phoneNumber: value.phone })
 
-    console.log('Form submitted:', values)
+    console.log('Form submitted:', value)
     // Handle login logic here
   }
 
@@ -59,25 +69,7 @@ export default function PhoneStep({
           <FormField
             control={form.control}
             name='phone'
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <ClientOnly>
-                    <PhoneInput
-                      country={'vn'}
-                      enableSearch
-                      value={field.value}
-                      onChange={(value) => field.onChange('+' + value)}
-                      inputProps={{
-                        name: 'phone',
-                        autoFocus: true
-                      }}
-                    />
-                  </ClientOnly>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            render={() => <PhoneInputField name='phone' country='vn' enableSearch placeholder='Số điện thoại' />}
           />
           {/* //TODO: Uncomment the following code to enable OTP functionality with Firebase */}
           {/* <div id='recaptcha-container'></div> */}

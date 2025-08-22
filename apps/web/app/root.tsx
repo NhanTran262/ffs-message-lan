@@ -7,7 +7,10 @@ import { store } from '~/store/store'
 import type { Route } from './+types/root'
 
 export const links: Route.LinksFunction = () => [
-  { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+  {
+    rel: 'preconnect',
+    href: 'https://fonts.googleapis.com'
+  },
   {
     rel: 'preconnect',
     href: 'https://fonts.gstatic.com',

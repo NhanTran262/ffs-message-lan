@@ -39,7 +39,10 @@ export class ConversationRepository {
                 id: true,
                 fullName: true,
                 images: {
-                  where: { isAvatar: true, isDeleted: false },
+                  where: {
+                    isAvatar: true,
+                    isDeleted: false
+                  },
                   take: 1,
                   select: { url: true }
                 }

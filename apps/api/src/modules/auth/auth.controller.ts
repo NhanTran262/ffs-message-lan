@@ -20,7 +20,8 @@ export class AuthController {
   @Post('login')
   async login(
     @Body() authRequest: AuthRequest,
-    @GetCookie(['deviceId', 'deviceType']) cookie: CookieDto,
+    @GetCookie(['deviceId', 'deviceType'])
+    cookie: CookieDto,
     @Res({ passthrough: true }) response: Response
   ): Promise<Omit<AuthResponse, 'accessToken' | 'refreshToken' | 'csrfToken'>> {
     authRequest.deviceId = cookie.deviceId
@@ -58,7 +59,8 @@ export class AuthController {
   @Post('register')
   async register(
     @Body() authRequest: AuthRequest,
-    @GetCookie(['deviceId', 'deviceType']) cookie: CookieDto,
+    @GetCookie(['deviceId', 'deviceType'])
+    cookie: CookieDto,
     @Res({ passthrough: true }) response: Response
   ): Promise<Omit<AuthResponse, 'accessToken' | 'refreshToken' | 'csrfToken'>> {
     authRequest.deviceId = cookie.deviceId
@@ -97,7 +99,8 @@ export class AuthController {
   @Post('refresh-token')
   async refreshToken(
     @Body() refreshTokenRequest: RefreshTokenRequest,
-    @GetCookie(['deviceId', 'deviceType', 'refreshToken', 'csrfToken']) cookie: CookieDto,
+    @GetCookie(['deviceId', 'deviceType', 'refreshToken', 'csrfToken'])
+    cookie: CookieDto,
     @Res({ passthrough: true }) response: Response
   ): Promise<Omit<AuthResponse, 'accessToken' | 'refreshToken' | 'csrfToken'>> {
     refreshTokenRequest.refreshToken = cookie.refreshToken
@@ -139,7 +142,8 @@ export class AuthController {
   async logout(
     @Body() sessionDto: SessionDto,
     @CurrentUser() user: Express.User,
-    @GetCookie(['deviceType', 'deviceId']) cookie: CookieDto,
+    @GetCookie(['deviceType', 'deviceId'])
+    cookie: CookieDto,
     @Res({ passthrough: true }) response: Response
   ) {
     sessionDto.userId = user.sub

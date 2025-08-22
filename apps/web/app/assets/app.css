@@ -160,11 +160,19 @@ body {
     @apply text-3xl font-bold text-primary uppercase tracking-wide;
   }
 
+  .react-tel-input .flag-dropdown {
+    @apply !border !border-input !rounded-l-xs;
+  }
+
   .react-tel-input .form-control {
     @apply !w-full py-6 !text-base !border !border-input !rounded-xs;
   }
 
-  .react-tel-input .flag-dropdown {
-    @apply !border !border-input !rounded-l-xs;
+  .react-tel-input .form-control-error {
+    @apply !border-destructive;
+  }
+
+  .react-tel-input .flag-dropdown-error {
+    @apply !border-destructive;
   }
 }

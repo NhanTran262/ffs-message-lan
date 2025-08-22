@@ -19,9 +19,10 @@ export class OtpService {
     const otp = this.generateOtp()
     console.log(otp, 'otp')
 
-    const verifications = await this.twilioService.client.verify.v2
-      .services(serviceSid)
-      .verifications.create({ to: phoneNumber, channel: 'sms' })
+    const verifications = await this.twilioService.client.verify.v2.services(serviceSid).verifications.create({
+      to: phoneNumber,
+      channel: 'sms'
+    })
     return verifications
   }
 
@@ -29,9 +30,10 @@ export class OtpService {
     const serviceSid = process.env.TWILIO_SERVICE_SID
     console.log(serviceSid, 'serviceSid')
 
-    const verificationCheck = await this.twilioService.client.verify.v2
-      .services(serviceSid)
-      .verificationChecks.create({ to: phoneNumber, code })
+    const verificationCheck = await this.twilioService.client.verify.v2.services(serviceSid).verificationChecks.create({
+      to: phoneNumber,
+      code
+    })
     return verificationCheck.status === 'approved'
   }
 }

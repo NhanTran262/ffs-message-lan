@@ -2,7 +2,7 @@ import { useState } from 'react'
 import ForgotPasswordForm from '~/components/auth/forgot-password-form'
 import LoginForm from '~/components/auth/login-form'
 import RegisterForm from '~/components/auth/register-form'
-import Logo from '~/components/logo'
+import Logo from '~/components/ui/logo'
 import { Card, CardHeader, CardTitle } from '~/components/ui/card'
 
 export default function AuthCard() {

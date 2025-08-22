@@ -5,7 +5,10 @@ import PhoneStep from '~/components/auth/phone-step'
 import { Button } from '~/components/ui/button'
 
 export default function RegisterForm({ onSwitch }: { onSwitch: (form: 'login') => void }) {
-  const [step, setStep] = useState<{ name: 'phone' | 'otp' | 'account-info'; phoneNumber?: string }>({ name: 'phone' })
+  const [step, setStep] = useState<{
+    name: 'phone' | 'otp' | 'account-info'
+    phoneNumber?: string
+  }>({ name: 'phone' })
   return (
     <div className='flex flex-col gap-2'>
       {step.name === 'phone' && <PhoneStep onSwitch={setStep} />}

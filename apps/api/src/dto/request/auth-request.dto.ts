@@ -7,7 +7,9 @@ export class AuthRequest {
   phone: string
 
   @IsNotEmpty({ message: ErrorMessage.PASSWORD_REQUIRED })
-  @MinLength(6, { message: ErrorMessage.PASSWORD_TOO_SHORT })
+  @MinLength(6, {
+    message: ErrorMessage.PASSWORD_TOO_SHORT
+  })
   @IsString()
   password: string
 

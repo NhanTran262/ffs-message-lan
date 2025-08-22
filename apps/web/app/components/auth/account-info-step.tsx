@@ -1,9 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router'
 import z from 'zod'
 import { Button } from '~/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '~/components/ui/form'
 import { Input } from '~/components/ui/input'
+import { ValidationRules } from '~/constants/validation-rule.constant'
 
 export default function AccountInfoStep({
   onSwitch,
@@ -12,26 +14,39 @@ export default function AccountInfoStep({
   onSwitch: (payload: { name: 'account-info'; phoneNumber?: string }) => void
   phoneNumber?: string
 }) {
+  const navigate = useNavigate()
   const FormSchema = z
     .object({
-      fullName: z.string().min(1, { message: 'Tên của bạn không được để trống.' }),
+      phoneNumber: z.string().optional(),
+      fullName: z.string().min(ValidationRules.DEFAULT_FIELD_LENGTH, {
+        message: 'Tên của bạn không được để trống.'
+      }),
       password: z
         .string()
-        .min(1, { message: 'Mật khẩu của bạn không được để trống.' })
-        .min(6, { message: 'Mật khẩu của bạn phải có ít nhất 6 ký tự.' })
-        .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/, {
+        .min(ValidationRules.DEFAULT_FIELD_LENGTH, {
+          message: 'Mật khẩu của bạn không được để trống.'
+        })
+        .min(ValidationRules.MIN_PASSWORD_LENGTH, {
+          message: 'Mật khẩu của bạn phải có ít nhất 6 ký tự.'
+        })
+        .regex(ValidationRules.PASSWORD_REGEX, {
           message: 'Mật khẩu phải chứa ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt.'
         }),
-      confirmPassword: z.string().min(1, { message: 'Vui lòng xác nhận mật khẩu của bạn.' })
+      confirmPassword: z.string().min(ValidationRules.DEFAULT_FIELD_LENGTH, {
+        message: 'Vui lòng xác nhận mật khẩu của bạn.'
+      })
     })
     .refine((value) => value.password === value.confirmPassword, {
-      message: 'Mật khẩu xác nhận không khớp.',
+      message: 'Mật khẩu xác nhận của bạn không khớp.',
       path: ['confirmPassword']
     })
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
+    mode: 'onChange',
+    reValidateMode: 'onChange',
     defaultValues: {
+      phoneNumber: phoneNumber || '',
       fullName: '',
       password: '',
       confirmPassword: ''
@@ -40,6 +55,7 @@ export default function AccountInfoStep({
 
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
     onSwitch({ name: 'account-info', phoneNumber })
+    navigate('/me')
 
     console.log('Form submitted:', values)
     // Handle account info submission logic here
@@ -51,8 +67,8 @@ export default function AccountInfoStep({
           control={form.control}
           name='fullName'
           render={({ field }) => (
-            <FormItem className='relative flex flex-col gap-2 items-center'>
-              <FormControl className='w-full py-6 rounded-xs'>
+            <FormItem>
+              <FormControl className='py-6 rounded-xs'>
                 <Input
                   {...field}
                   id='fullName'
@@ -70,8 +86,8 @@ export default function AccountInfoStep({
           control={form.control}
           name='password'
           render={({ field }) => (
-            <FormItem className='relative flex flex-col gap-2 items-center'>
-              <FormControl className='w-full py-6 rounded-xs'>
+            <FormItem>
+              <FormControl className='py-6 rounded-xs'>
                 <Input
                   {...field}
                   id='password'
@@ -89,8 +105,8 @@ export default function AccountInfoStep({
           control={form.control}
           name='confirmPassword'
           render={({ field }) => (
-            <FormItem className='relative flex flex-col gap-2 items-center'>
-              <FormControl className='w-full py-6 rounded-xs'>
+            <FormItem>
+              <FormControl className='py-6 rounded-xs'>
                 <Input
                   {...field}
                   id='confirmPassword'
